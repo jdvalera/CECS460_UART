@@ -30,8 +30,8 @@ module uart_top(
 	 wire write_strobe, read_strobe;
 	 reg [18:0] k;
 	 wire load, clr, txrdy, rxrdy, ferr, perr, ovf;
-	 wire int_ack, uart_int, data_stat_sel, int_pulse, dff1, dff2;
-	 reg interrupt;
+	 wire int_ack, uart_int, data_stat_sel, int_pulse;
+	 reg interrupt, dff1, dff2;
 	 
 	 //==================================================================
 	 // Baud rate
