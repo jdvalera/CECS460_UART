@@ -26,12 +26,13 @@ module uart_top(
 	 
 	 wire [15:0] port_id, out_port;
 	 reg [15:0] in_port;
-	 wire [7:0] data;
+	 wire [7:0] data, status, rx_status;
 	 wire write_strobe, read_strobe;
 	 reg [18:0] k;
 	 wire load, clr, txrdy, rxrdy, ferr, perr, ovf;
 	 wire int_ack, uart_int, data_stat_sel, int_pulse;
 	 reg interrupt, dff1, dff2;
+
 	 
 	 //==================================================================
 	 // Baud rate
@@ -66,6 +67,12 @@ module uart_top(
 		assign clr = (port_id == 0) & read_strobe;
 		
 		//==================================================================
+		// status
+		//==================================================================
+		assign rx_status = {3'b0, ovf, ferr, perr, txrdy, rxrdy};
+		assign status = rx_status;
+		
+		//==================================================================
 		// DATA_STATUS_SELECT
 		//==================================================================
 		
@@ -74,7 +81,7 @@ module uart_top(
 		always @*
 			begin
 				if(data_stat_sel)
-					in_port = {11'b0, ovf, ferr, perr, txrdy, rxrdy};
+					in_port = {11'b0, status};
 				else
 					in_port = {8'b0, data};
 			end
@@ -148,6 +155,8 @@ module uart_top(
 					if(int_pulse)
 						interrupt <= 1; else
 					if(int_ack)
+						interrupt <= 0;
+					else
 						interrupt <= 0;
 				end
 
