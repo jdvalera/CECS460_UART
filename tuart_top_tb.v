@@ -48,19 +48,23 @@ module tuart_top_tb;
 		.tx(tx)
 	);
 	
+	always #10 clk=~clk;
 
 	initial begin
 		// Initialize Inputs
-		clk = 0;
-		reset = 0;
+		clk = 1;
+		reset = 1;
 		rx = 0;
 		eight = 0;
 		pen = 0;
 		ohel = 0;
-		baud = 0;
+		baud = 11;
 
 		// Wait 100 ns for global reset to finish
 		#100;
+		reset = 0;
+		#20;
+		rx = 1;
         
 		// Add stimulus here
 

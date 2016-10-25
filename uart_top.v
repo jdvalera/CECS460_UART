@@ -24,12 +24,13 @@ module uart_top(
 		output wire tx
     );
 	 
-	 wire [15:0] port_id;
-	 wire [7:0] out_port, data;
+	 wire [15:0] port_id, out_port;
+	 wire [7:0] data;
 	 wire write_strobe, read_strobe;
 	 reg [18:0] k;
-	 wire load, clr, txrdy, rxrdy, ferr, perr, ovr;
-	 wire interrupt, int_ack;
+	 wire load, clr, txrdy, rxrdy, ferr, perr, ovf;
+	 wire int_ack, uart_int;
+	 reg interrupt;
 	 
 	 //==================================================================
 	 // Baud rate
@@ -72,7 +73,7 @@ module uart_top(
 //    );
 
 		tx_engine tx_engine(.clk(clk), .reset(reset), .eight(eight), .pen(pen),
-								  .ohel(ohel), .load(load), .k(k), .out_port(out_port),
+								  .ohel(ohel), .load(load), .k(k), .out_port(out_port[7:0]),
 								  .tx(tx), .txrdy(txrdy));
 
 //module rx_engine(
@@ -98,7 +99,23 @@ module uart_top(
 //output        INTERRUPT_ACK;
 //output        MEMHIOL;
 
-		tramelblaze_top	tramelblaze_top(.CLK(clk), .RESET(rst), .IN_PORT(data), .INTERRUPT(interrupt),
+//module tramelblaze_top (CLK, RESET, IN_PORT, INTERRUPT, 
+//                        OUT_PORT, PORT_ID, READ_STROBE, WRITE_STROBE, INTERRUPT_ACK);
+
+		//INTERRUPT
+		assign uart_int = txrdy | txrdy;
+		
+		always @*
+			begin
+				if(reset)
+					interrupt <= 0; else
+				if(uart_int)
+					interrupt <= 1; else
+				if(int_ack)
+					interrupt <= 0;
+			end
+
+		tramelblaze_top	tramelblaze_top(.CLK(clk), .RESET(reset), .IN_PORT({8'b0,data}), .INTERRUPT(interrupt),
 													 .OUT_PORT(out_port), .PORT_ID(port_id), .READ_STROBE(read_strobe),
 													 .WRITE_STROBE(write_strobe), .INTERRUPT_ACK(int_ack));
 
