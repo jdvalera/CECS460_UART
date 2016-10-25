@@ -76,7 +76,7 @@ module uart_top_tb;
 		write_strobe = 1;
 		#20;
 		write_strobe = 0;
-		#20;
+		#200;
         
 		// Add stimulus here
 

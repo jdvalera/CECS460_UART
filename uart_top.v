@@ -83,7 +83,7 @@ module uart_top(
 //		output reg RXRDY, FERR, PERR, OVF
 //    );
 		
-		rx_engine rx_engine(.clk(clk), .rst(reset), .rx(rx), .eight(eight), .pen(pen),
+		rx_engine rx_engine(.clk(clk), .rst(reset), .rx(tx), .eight(eight), .pen(pen),
 								  .clr(clr), .even(~ohel), .k(k), .data(data), .RXRDY(rxrdy),
 								  .FERR(ferr), .PERR(perr), .OVF(ovf));
 
