@@ -25,6 +25,7 @@ module uart_top(
     );
 	 
 	 wire [15:0] port_id, out_port;
+	 reg [15:0] in_port;
 	 wire [7:0] data;
 	 wire write_strobe, read_strobe;
 	 reg [18:0] k;
@@ -69,6 +70,14 @@ module uart_top(
 		//==================================================================
 		
 		assign data_stat_sel = (port_id == 16'h0001) ? 1 : 0;
+		
+		always @*
+			begin
+				if(data_stat_sel)
+					in_port = {11'b0, ovf, ferr, perr, txrdy, rxrdy};
+				else
+					in_port = {8'b0, data};
+			end
 		
 		
 //		module tx_engine(
@@ -123,7 +132,7 @@ module uart_top(
 					interrupt <= 0;
 			end
 
-		tramelblaze_top	tramelblaze_top(.CLK(clk), .RESET(reset), .IN_PORT({8'b0,data}), .INTERRUPT(interrupt),
+		tramelblaze_top	tramelblaze_top(.CLK(clk), .RESET(reset), .IN_PORT(in_port), .INTERRUPT(interrupt),
 													 .OUT_PORT(out_port), .PORT_ID(port_id), .READ_STROBE(read_strobe),
 													 .WRITE_STROBE(write_strobe), .INTERRUPT_ACK(int_ack));
 
