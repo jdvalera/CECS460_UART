@@ -19,16 +19,18 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module uart_top(
-		input wire clk, reset, rx, eight, pen, ohel,
+		input wire clk, reset, eight, pen, ohel, write_strobe, read_strobe,
 		input wire [3:0]baud,
-		output wire tx
+		input wire [7:0] out_port,
+		input wire [15:0] port_id,
+		output wire [7:0] data
     );
 	 
-	 wire [15:0] port_id;
-	 wire [7:0] out_port, data;
-	 wire write_strobe, read_strobe;
+	 //wire [15:0] port_id;
+	 //wire [7:0] out_port, data;
+	 //wire write_strobe, read_strobe;
 	 reg [18:0] k;
-	 wire load, clr, txrdy, rxrdy, ferr, perr, ovr;
+	 wire load, clr, txrdy, rxrdy, ferr, perr, ovr, tx;
 	 
 	 //==================================================================
 	 // Baud rate

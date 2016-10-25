@@ -4,7 +4,7 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   12:48:08 10/25/2016
+// Create Date:   13:24:49 10/25/2016
 // Design Name:   uart_top
 // Module Name:   E:/Users/John/Desktop/Dropbox/CECS460/CECS460_proj3/proj3/uart_top_tb.v
 // Project Name:  proj3
@@ -54,25 +54,21 @@ module uart_top_tb;
 		.data(data)
 	);
 
-	always #10 clk=~clk;
 	initial begin
 		// Initialize Inputs
-		clk = 1;
-		reset = 1;
+		clk = 0;
+		reset = 0;
 		eight = 0;
 		pen = 0;
 		ohel = 0;
 		write_strobe = 0;
 		read_strobe = 0;
-		baud = 11;
-		out_port = 8'hAA;
+		baud = 0;
+		out_port = 0;
 		port_id = 0;
 
 		// Wait 100 ns for global reset to finish
 		#100;
-		reset=0;
-		#20 write_strobe = 1;
-		#20 write_strobe = 0;
         
 		// Add stimulus here
 
