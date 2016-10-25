@@ -53,22 +53,30 @@ module uart_top_tb;
 		.port_id(port_id), 
 		.data(data)
 	);
+	
+	always #10 clk=~clk;
 
 	initial begin
 		// Initialize Inputs
-		clk = 0;
-		reset = 0;
+		clk = 1;
+		reset = 1;
 		eight = 0;
 		pen = 0;
 		ohel = 0;
 		write_strobe = 0;
 		read_strobe = 0;
-		baud = 0;
-		out_port = 0;
+		baud = 11;
+		out_port = 8'hAA;
 		port_id = 0;
 
 		// Wait 100 ns for global reset to finish
 		#100;
+		reset = 0;
+		#20;
+		write_strobe = 1;
+		#20;
+		write_strobe = 0;
+		#20;
         
 		// Add stimulus here
 
