@@ -1,0 +1,120 @@
+;====================================================================
+; John Valera
+; CECS 460 - Project 3
+; 10/17/16
+; Edit History: 10/17/16
+; Abstract: UART receive data and echo msg.
+;
+; STATUS - [BIT 3 - BIT 0]
+; OVF - Overflow (Bit 4)
+; PERR - Frame error (Bit 3)
+; FERR -  Parity error (Bit 2)
+; TXRDY - Transmit Ready (Bit 1)
+; RXRDY - Receive Ready (Bit 0)
+; Data - [Bit 7 - Bit 0]
+;====================================================================
+
+;====================================================================
+; Constants
+;====================================================================
+ZERO		EQU  0000
+ONE     EQU  0001
+COUNT		EQU  0010
+DATA_PORT    EQU  0000
+STATUS_PORT  EQU  0001
+FERR_MASK    EQU  0001
+PERR_MASK    EQU  0002
+TXRDY_MASK   EQU  0004
+RXRDY_MASK   EQU  0008
+OVF_MASK     EQU  0010
+;====================================================================
+; Register Alias
+;====================================================================
+msg_output    EQU   R0
+FERR    EQU  R1
+PERR    EQU  R2
+TXRDY   EQU  R3
+RXRDY   EQU  R4
+MSG     EQU  R5
+DATA_IN  EQU  R6
+TEMP    EQU  R7
+CNT1    EQU  R8
+CNT2    EQU  R9
+LEDS    EQU  RA
+
+;====================================================================
+; Initialization
+; Initialize registers
+;====================================================================
+START ENINT
+        LOAD R0, ZERO
+        LOAD FERR, ZERO
+        LOAD PERR, ZERO
+        LOAD TXRDY, ZERO
+        LOAD RXRDY, ZERO
+        LOAD MSG, ZERO
+        LOAD CNT1, ZERO
+        LOAD CNT2, ZERO
+        LOAD LEDS, 000F
+;====================================================================
+; Main Loop
+; Every ~0.01s toggle LEDS
+; Output LED values to port 1234
+;====================================================================
+MAIN
+        ADD CNT1, ONE
+        ADDC CNT2, ZERO
+        COMP CNT2, 000F ; About 0.01 s
+        JUMPC DONE
+        LOAD CNT1, ZERO
+        LOAD CNT2, ZERO
+        XOR LEDS, 00FF
+DONE
+        OUTPUT LEDS, 1234
+        JUMP MAIN
+
+
+;====================================================================
+; Interrupt Service Routine
+; Starts at address 0300
+; CHECK RXRDY
+; Load status from port 0001
+; Check if RXRDY is set
+; If RXRDY is set, load data from port 0000
+; Put data into MSG register
+; CHECK TXRDY
+; Load status from port 0001
+; If TXRDY is set, output MSG into port 0000
+;====================================================================
+
+        ADDRESS 0300
+ISR
+        ;================
+        ;RXRDY CHECK
+        ;================
+        INPUT DATA_IN, STATUS_PORT
+        LOAD TEMP, RXRDY_MASK
+        AND TEMP, DATA_IN
+        COMP TEMP, RXRDY_MASK ; IF RXRDY SET
+        JUMPNZ INTDONE
+        INPUT DATA_IN, DATA_PORT
+        LOAD MSG, DATA_IN
+        ;================
+        ; TXRDY CHECK
+        ;================
+        INPUT DATA_IN, STATUS_PORT
+        LOAD TEMP, TXRDY_MASK
+        AND TEMP, DATA_IN
+        COMP TEMP, TXRDY_MASK ; IF TXRDY SET
+        JUMPNZ INTDONE
+        OUTPUT MSG, POUT
+INTDONE
+        RETEN
+
+;====================================================================
+; Setting up Interrupt
+;====================================================================
+        ADDRESS 0FFE
+ENDIT   JUMP ISR
+
+        END
