@@ -130,7 +130,7 @@ module uart_top(
 		// Use pulse edge detector to create interrupt pulse
 		// Feed interrupt pulse into SR Flop
 		//==================================================================
-		assign uart_int = txrdy | txrdy;
+		assign uart_int = txrdy | rxrdy;
 		
 		always @(posedge clk, posedge reset)
 			begin
