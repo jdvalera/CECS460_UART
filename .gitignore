@@ -3,7 +3,7 @@
 
 # But not these files...
 !.gitignore
-!.v
+!*.v
 !.ucf
 # etc...
 
