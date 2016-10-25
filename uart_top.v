@@ -29,7 +29,7 @@ module uart_top(
 	 wire write_strobe, read_strobe;
 	 reg [18:0] k;
 	 wire load, clr, txrdy, rxrdy, ferr, perr, ovf;
-	 wire int_ack, uart_int;
+	 wire int_ack, uart_int, data_stat_sel;
 	 reg interrupt;
 	 
 	 //==================================================================
@@ -63,6 +63,12 @@ module uart_top(
 		// clr
 		//==================================================================
 		assign clr = (port_id == 0) & read_strobe;
+		
+		//==================================================================
+		// DATA_STATUS_SELECT
+		//==================================================================
+		
+		assign data_stat_sel = (port_id == 16'h0001) ? 1 : 0;
 		
 		
 //		module tx_engine(
@@ -101,8 +107,10 @@ module uart_top(
 
 //module tramelblaze_top (CLK, RESET, IN_PORT, INTERRUPT, 
 //                        OUT_PORT, PORT_ID, READ_STROBE, WRITE_STROBE, INTERRUPT_ACK);
-
+		
+		//==================================================================
 		//INTERRUPT
+		//==================================================================
 		assign uart_int = txrdy | txrdy;
 		
 		always @*

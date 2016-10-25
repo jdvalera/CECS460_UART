@@ -63,8 +63,6 @@ module uart_top_tb;
 		// Wait 100 ns for global reset to finish
 		#100;
 		reset = 0;
-		#20;
-		rx = 1;
         
 		// Add stimulus here
 
