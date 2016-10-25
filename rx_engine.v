@@ -178,7 +178,7 @@ module rx_engine(
 				0:
 				begin
 				d = shq >> 2;
-				d[7] = 1'b1; // stop bit
+				//d[7] = 1'b1; // stop bit
 				end
 				1: d = shq >> 1;
 				2: d = shq >> 1;

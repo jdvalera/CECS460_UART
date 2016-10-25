@@ -30,7 +30,7 @@ module uart_top(
 	 wire write_strobe, read_strobe;
 	 reg [18:0] k;
 	 wire load, clr, txrdy, rxrdy, ferr, perr, ovf;
-	 wire int_ack, uart_int, data_stat_sel;
+	 wire int_ack, uart_int, data_stat_sel, int_pulse, dff1, dff2;
 	 reg interrupt;
 	 
 	 //==================================================================
@@ -118,19 +118,38 @@ module uart_top(
 //                        OUT_PORT, PORT_ID, READ_STROBE, WRITE_STROBE, INTERRUPT_ACK);
 		
 		//==================================================================
-		//INTERRUPT
+		// INTERRUPT
+		// If txrdy or rxrdy is 1
+		// Use pulse edge detector to create interrupt pulse
+		// Feed interrupt pulse into SR Flop
 		//==================================================================
 		assign uart_int = txrdy | txrdy;
 		
-		always @*
+		always @(posedge clk, posedge reset)
 			begin
 				if(reset)
-					interrupt <= 0; else
-				if(uart_int)
-					interrupt <= 1; else
-				if(int_ack)
-					interrupt <= 0;
+					begin
+						dff1 <= 0;
+						dff2 <= 0;
+					end
+				else
+					begin
+						dff1 <= uart_int;
+						dff2 <= dff1;
+					end
 			end
+
+		assign int_pulse = dff1 & ~dff2;
+	 
+		always @*
+				begin
+					if(reset)
+						interrupt <= 0; else
+					if(int_pulse)
+						interrupt <= 1; else
+					if(int_ack)
+						interrupt <= 0;
+				end
 
 		tramelblaze_top	tramelblaze_top(.CLK(clk), .RESET(reset), .IN_PORT(in_port), .INTERRUPT(interrupt),
 													 .OUT_PORT(out_port), .PORT_ID(port_id), .READ_STROBE(read_strobe),
