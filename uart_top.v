@@ -29,6 +29,7 @@ module uart_top(
 	 wire write_strobe, read_strobe;
 	 reg [18:0] k;
 	 wire load, clr, txrdy, rxrdy, ferr, perr, ovr;
+	 wire interrupt, int_ack;
 	 
 	 //==================================================================
 	 // Baud rate
@@ -85,5 +86,20 @@ module uart_top(
 								  .clr(clr), .even(~ohel), .k(k), .data(data), .RXRDY(rxrdy),
 								  .FERR(ferr), .PERR(perr), .OVF(ovf));
 
+//input         CLK;
+//input         RESET;
+//input  [15:0] IN_PORT;
+//input         INTERRUPT;
+//
+//output [15:0] OUT_PORT;
+//output [15:0] PORT_ID;
+//output        READ_STROBE;
+//output        WRITE_STROBE;
+//output        INTERRUPT_ACK;
+//output        MEMHIOL;
+
+		tramelblaze_top	tramelblaze_top(.CLK(clk), .RESET(rst), .IN_PORT(data), .INTERRUPT(interrupt),
+													 .OUT_PORT(out_port), .PORT_ID(port_id), .READ_STROBE(read_strobe),
+													 .WRITE_STROBE(write_strobe), .INTERRUPT_ACK(int_ack));
 
 endmodule
