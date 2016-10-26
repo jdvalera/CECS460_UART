@@ -22,10 +22,10 @@ ONE     EQU  0001
 COUNT		EQU  0010
 DATA_PORT    EQU  0000
 STATUS_PORT  EQU  0001
-FERR_MASK    EQU  0001
-PERR_MASK    EQU  0002
-TXRDY_MASK   EQU  0004
-RXRDY_MASK   EQU  0008
+FERR_MASK    EQU  0008
+PERR_MASK    EQU  0004
+TXRDY_MASK   EQU  0002
+RXRDY_MASK   EQU  0001
 OVF_MASK     EQU  0010
 ;====================================================================
 ; Register Alias
