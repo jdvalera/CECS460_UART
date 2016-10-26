@@ -31,7 +31,8 @@ module uart_top(
 	 reg [18:0] k;
 	 wire load, clr, txrdy, rxrdy, ferr, perr, ovf;
 	 wire int_ack, uart_int, data_stat_sel, int_pulse;
-	 reg interrupt, dff1, dff2;
+	 reg interrupt, dff1, dff2, dff3, dff4, dff5, dff6;
+	 wire rxrdy_pulse, txrdy_pulse;
 
 	 
 	 //==================================================================
@@ -130,7 +131,9 @@ module uart_top(
 		// Use pulse edge detector to create interrupt pulse
 		// Feed interrupt pulse into SR Flop
 		//==================================================================
-		assign uart_int = txrdy | rxrdy;
+		assign rxrdy_pulse = dff3 & ~dff4;
+		assign txrdy_pulse = dff5 & ~dff6;
+		assign uart_int = txrdy_pulse | rxrdy_pulse;
 		
 		always @(posedge clk, posedge reset)
 			begin
@@ -138,13 +141,22 @@ module uart_top(
 					begin
 						dff1 <= 0;
 						dff2 <= 0;
+						dff3 <= 0;
+						dff4 <= 0;
+						dff5 <= 0;
+						dff6 <= 0;
 					end
 				else
 					begin
 						dff1 <= uart_int;
 						dff2 <= dff1;
+						dff3 <= rxrdy;
+						dff4 <= dff3;
+						dff5 <= txrdy;
+						dff6 <= dff5;
 					end
 			end
+
 
 		assign int_pulse = dff1 & ~dff2;
 	 
