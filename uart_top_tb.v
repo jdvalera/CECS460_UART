@@ -35,6 +35,7 @@ module uart_top_tb;
 
 	// Outputs
 	wire tx;
+	wire [7:0] LEDS;
 
 	// Instantiate the Unit Under Test (UUT)
 	uart_top uut (
@@ -45,7 +46,8 @@ module uart_top_tb;
 		.pen(pen), 
 		.ohel(ohel), 
 		.baud(baud), 
-		.tx(tx)
+		.tx(tx),
+		.LEDS(LEDS)
 	);
 
 	always #10 clk=~clk;
