@@ -75,10 +75,10 @@ module rx_engine(
 			begin
 				start = 0;
 				doit = 1;
-				if(~done)
-					next_state = 2;
-				else
+				if(done)
 					next_state = 0;
+				else
+					next_state = 2;
 			end
 			default:
 			begin
@@ -96,11 +96,11 @@ module rx_engine(
 		always @*
 			begin
 				case ({eight, pen})
-				0: num_bits = 8;
-				1: num_bits = 9;
-				2: num_bits = 9;
-				3: num_bits = 10;
-				default: num_bits = 8;
+				0: num_bits = 9;
+				1: num_bits = 10;
+				2: num_bits = 10;
+				3: num_bits = 11;
+				default: num_bits = 9;
 				endcase
 			end
 			
