@@ -169,7 +169,7 @@ module uart_top(
 					if(int_ack)
 						interrupt <= 0;
 					else
-						interrupt <= 0;
+						interrupt <= interrupt;
 				end
 
 		tramelblaze_top	tramelblaze_top(.CLK(clk), .RESET(reset), .IN_PORT(in_port), .INTERRUPT(interrupt),
