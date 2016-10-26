@@ -83,7 +83,7 @@ module uart_top(
 		always @*
 			begin
 				if(data_stat_sel)
-					in_port = {11'b0, status};
+					in_port = {8'b0, status};
 				else
 					in_port = {8'b0, data};
 			end
