@@ -63,7 +63,7 @@ module rx_engine(
 				start = 1;
 				doit = 1;
 				if(rx)
-					next_state = 1; else
+					next_state = 0; else
 				if(~rx && ~btu)
 					next_state = 1; else
 				if(~rx && btu)
