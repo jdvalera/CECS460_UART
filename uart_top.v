@@ -21,7 +21,8 @@
 module uart_top(
 		input wire clk, reset, rx, eight, pen, ohel,
 		input wire [3:0]baud,
-		output wire tx
+		output wire tx,
+		output wire [7:0] LEDS
     );
 	 
 	 wire [15:0] port_id, out_port;
@@ -172,8 +173,11 @@ module uart_top(
 						interrupt <= interrupt;
 				end
 
-		tramelblaze_top	tramelblaze_top(.CLK(clk), .RESET(reset), .IN_PORT(in_port), .INTERRUPT(interrupt),
-													 .OUT_PORT(out_port), .PORT_ID(port_id), .READ_STROBE(read_strobe),
+		tramelblaze_top	tramelblaze_top(.CLK(clk), .RESET(reset), .IN_PORT(in_port),
+													 .INTERRUPT(interrupt), .OUT_PORT(out_port),
+													 .PORT_ID(port_id), .READ_STROBE(read_strobe),
 													 .WRITE_STROBE(write_strobe), .INTERRUPT_ACK(int_ack));
+													 
+		assign LEDS = out_port[7:0];
 
 endmodule
