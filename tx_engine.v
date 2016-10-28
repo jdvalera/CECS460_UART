@@ -124,7 +124,7 @@ module tx_engine(
 	always @(posedge clk, posedge reset)
 	 begin
 		if(reset)
-			shq <= 11'b1; else
+			shq <= 11'b11111111111; else
 		if(load_d1)
 			shq <= q_11b; else
 		if(btu)
