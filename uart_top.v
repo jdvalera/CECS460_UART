@@ -40,8 +40,8 @@ module uart_top(
 	 reg [18:0] k;
 	 wire load, clr, txrdy, rxrdy, ferr, perr, ovf;
 	 wire int_ack, uart_int, data_stat_sel, int_pulse;
-	 reg interrupt, dff1, dff2, dff3, dff4, dff5, dff6;
-	 wire rxrdy_pulse, txrdy_pulse;
+	 reg interrupt, dff1, dff2, dff3, dff4, dff5, dff6, dff7, dff8;
+	 wire rxrdy_pulse, txrdy_pulse, rst_sync;
 
 	 
 	 //==================================================================
@@ -97,14 +97,33 @@ module uart_top(
 			end
 		
 
-		tx_engine tx_engine(.clk(clk), .reset(reset), .eight(eight), .pen(pen),
+		tx_engine tx_engine(.clk(clk), .reset(rst_sync), .eight(eight), .pen(pen),
 								  .ohel(ohel), .load(load), .k(k), .out_port(out_port[7:0]),
 								  .tx(tx), .txrdy(txrdy));
 								  
 		
-		rx_engine rx_engine(.clk(clk), .rst(reset), .rx(rx), .eight(eight), .pen(pen),
+		rx_engine rx_engine(.clk(clk), .rst(rst_sync), .rx(rx), .eight(eight), .pen(pen),
 								  .clr(clr), .even(~ohel), .k(k), .data(data), .RXRDY(rxrdy),
 								  .FERR(ferr), .PERR(perr), .OVF(ovf));
+								  
+		//==================================================================
+		// AISO
+		//==================================================================
+			always @(posedge clk, posedge reset)
+				begin
+					if(reset)
+						begin
+							dff7 <= 1'b1;
+							dff8 <= dff7;
+						end
+					else
+						begin
+							dff7 <= 0;
+							dff8 <= 0;
+						end
+				end
+				
+			assign rst_sync = ~dff8;
 
 		
 		//==================================================================
@@ -117,7 +136,7 @@ module uart_top(
 		assign txrdy_pulse = dff5 & ~dff6;
 		assign uart_int = txrdy_pulse | rxrdy_pulse;
 		
-		always @(posedge clk, posedge reset)
+		always @(posedge clk, posedge rst_sync)
 			begin
 				if(reset)
 					begin
@@ -144,7 +163,7 @@ module uart_top(
 	 
 		always @*
 				begin
-					if(reset)
+					if(rst_sync)
 						interrupt <= 0; else
 					if(int_pulse)
 						interrupt <= 1; else
@@ -154,7 +173,7 @@ module uart_top(
 						interrupt <= interrupt;
 				end
 
-		tramelblaze_top	tramelblaze_top(.CLK(clk), .RESET(reset), .IN_PORT(in_port),
+		tramelblaze_top	tramelblaze_top(.CLK(clk), .RESET(rst_sync), .IN_PORT(in_port),
 													 .INTERRUPT(interrupt), .OUT_PORT(out_port),
 													 .PORT_ID(port_id), .READ_STROBE(read_strobe),
 													 .WRITE_STROBE(write_strobe), .INTERRUPT_ACK(int_ack));
