@@ -138,7 +138,7 @@ module uart_top(
 		
 		always @(posedge clk, posedge rst_sync)
 			begin
-				if(reset)
+				if(rst_sync)
 					begin
 						dff1 <= 0;
 						dff2 <= 0;
