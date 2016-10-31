@@ -1,23 +1,32 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    20:32:07 10/17/2016 
-// Design Name: 
-// Module Name:    rx_engine 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+//****************************************************************//
+//  This document contains information proprietary to the         //
+//  CSULB student that created the file - any reuse without       //
+//  adequate approval and documentation is prohibited             //
+//                                                                //
+//  Class: CECS 460                                               //
+//  Project name: UART		                                       //
+//  File name: rx_engine.v                                        //
+//                                                                //
+//  Created by John Valera on 10/17/16 based on John Tramel's     //
+//  design.                                                       //
+//  Copyright © 2016 John Valera. All rights reserved.            //
+//                                                                //
+//  Abstract: Receive engine that syncs with transmission to      //
+//            receive messages.                                   //
+//										                                    //
+//  Edit history: 10/31/16                                        //
+//                                                                //
+//  In submitting this file for class work at CSULB               //
+//  I am confirming that this is my work and the work             //
+//  of no one else.                                               //
+//                                                                //
+//  In the event other code sources are utilized I will           //
+//  document which portion of code and who is the author          //
+//                                                                //
+// In submitting this code I acknowledge that plagiarism          //
+// in student project work is subject to dismissal from the class //
+//****************************************************************//
 module rx_engine(
 		input wire clk, rst, rx, eight, pen, clr, even,
 		input wire [18:0] k,
@@ -278,13 +287,8 @@ module rx_engine(
 			end
 			
 		//==================================================================
-		// Output
+		// Data Output
 		//==================================================================
-		
-//		assign status[4] = OVF;
-//		assign status[3] = FERR;
-//		assign status[2] = PERR;
-//		assign status[0] = RXRDY;
 		
 		assign data = d[7:0];
 		

@@ -1,23 +1,31 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    18:51:30 10/24/2016 
-// Design Name: 
-// Module Name:    uart_top 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+//****************************************************************//
+//  This document contains information proprietary to the         //
+//  CSULB student that created the file - any reuse without       //
+//  adequate approval and documentation is prohibited             //
+//                                                                //
+//  Class: CECS 460                                               //
+//  Project name: UART		                                       //
+//  File name: uart_top.v                                         //
+//                                                                //
+//  Created by John Valera on 10/17/16 based on John Tramel's     //
+//  design.                                                       //
+//  Copyright © 2016 John Valera. All rights reserved.            //
+//                                                                //
+//  Abstract: UART module that receives message and echos it back.//
+//                                                                //
+//  Edit history: 10/31/16                                        //
+//                                                                //
+//  In submitting this file for class work at CSULB               //
+//  I am confirming that this is my work and the work             //
+//  of no one else.                                               //
+//                                                                //
+//  In the event other code sources are utilized I will           //
+//  document which portion of code and who is the author          //
+//                                                                //
+// In submitting this code I acknowledge that plagiarism          //
+// in student project work is subject to dismissal from the class //
+//****************************************************************//
 module uart_top(
 		input wire clk, reset, rx, eight, pen, ohel,
 		input wire [3:0]baud,
@@ -88,43 +96,16 @@ module uart_top(
 					in_port = {8'b0, data};
 			end
 		
-		
-//		module tx_engine(
-//		input wire clk, reset, eight, pen, ohel, load,
-//		input wire [18:0] k,
-//		input wire [7:0] out_port,
-//		output reg tx, txrdy
-//    );
 
 		tx_engine tx_engine(.clk(clk), .reset(reset), .eight(eight), .pen(pen),
 								  .ohel(ohel), .load(load), .k(k), .out_port(out_port[7:0]),
 								  .tx(tx), .txrdy(txrdy));
-
-//module rx_engine(
-//		input wire clk, rst, rx, eight, pen, clr, even,
-//		input wire [18:0] k,
-//		output wire [7:0] data,
-//		output reg RXRDY, FERR, PERR, OVF
-//    );
+								  
 		
 		rx_engine rx_engine(.clk(clk), .rst(reset), .rx(rx), .eight(eight), .pen(pen),
 								  .clr(clr), .even(~ohel), .k(k), .data(data), .RXRDY(rxrdy),
 								  .FERR(ferr), .PERR(perr), .OVF(ovf));
 
-//input         CLK;
-//input         RESET;
-//input  [15:0] IN_PORT;
-//input         INTERRUPT;
-//
-//output [15:0] OUT_PORT;
-//output [15:0] PORT_ID;
-//output        READ_STROBE;
-//output        WRITE_STROBE;
-//output        INTERRUPT_ACK;
-//output        MEMHIOL;
-
-//module tramelblaze_top (CLK, RESET, IN_PORT, INTERRUPT, 
-//                        OUT_PORT, PORT_ID, READ_STROBE, WRITE_STROBE, INTERRUPT_ACK);
 		
 		//==================================================================
 		// INTERRUPT
